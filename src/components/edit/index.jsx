@@ -1,18 +1,14 @@
 import { Modal, Input } from "antd";
 import { useState } from "react";
-import useTodoStore from "../../store/store";
+import { useTodoStore } from "../../store/store";
 
 const Edit = ({ task, close }) => {
   const [newTask, setNewTask] = useState(task.text);
-  const updateTask = useTodoStore((state) => state.update);
+  // const editTask = useTodoStore((state) => state.editTask);
+  const { editTask } = useTodoStore();
 
   return (
-    <Modal
-      open
-      onCancel={close}
-      footer={null}
-      className="custom-modal"
-    >
+    <Modal open onCancel={close} footer={null} className="custom-modal">
       <div className="p-4">
         <h2 className="text-lg font-semibold mb-4">Edit Task</h2>
         <Input
@@ -30,8 +26,10 @@ const Edit = ({ task, close }) => {
           <button
             className="bg-[#e6ccb2] text-white px-4 py-2 rounded hover:bg-[#655a4f]"
             onClick={() => {
-              updateTask(task.id, newTask);
-              close();
+              if (newTask.trim() !== "") {
+                editTask({ ...task, text: newTask });
+                close();
+              }
             }}
           >
             Save

@@ -1,29 +1,34 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Button } from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import Edit from '../edit';
-import { useTasks, useSearchQuery, useTodoActions } from '../../store/store';
+import React, { useState, useMemo, useEffect } from "react";
+import { Button, Spin } from "antd"; // Importing Spin for loading state
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import Edit from "../edit";
+import { useTodoStore } from "../../store/store";
 
 const TaskList = () => {
-  const tasks = useTasks();
-  const searchQuery = useSearchQuery();
-  const { toggleTask, deleteTask, fetchTasks } = useTodoActions();
+  const { toggleTask, deleteTask, fetchTasks, loading, searchQuery, tasks } =
+    useTodoStore();
   const [edited, setEdited] = useState(null);
 
-  // Fetch tasks only once when the component is mounted
   useEffect(() => {
     fetchTasks();
-  }, [fetchTasks]); // Avoid infinite loop by only running once
+  }, [fetchTasks]);
 
-  // Memoize filtered tasks to avoid unnecessary recalculations
   const filteredTasks = useMemo(() => {
-    const query = searchQuery?.toLowerCase() || '';
-    return tasks.filter(task => 
-      task?.text?.toLowerCase()?.includes(query)
-    );
+    const query = searchQuery?.toLowerCase() || "";
+    return tasks.filter((task) => task?.text?.toLowerCase()?.includes(query));
   }, [tasks, searchQuery]);
 
-  if (tasks.length === 0) return <div>Loading tasks...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center py-8">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (tasks.length === 0) {
+    return <div className="text-center text-lg">No tasks available</div>;
+  }
 
   return (
     <div className="mt-4">
@@ -41,15 +46,15 @@ const TaskList = () => {
             {task.text}
           </span>
           <div className="flex gap-2">
-            <Button 
-              className="!text-[#9d6b53]" 
+            <Button
+              className="!text-[#9d6b53]"
               onClick={() => toggleTask(task.id)}
             >
               {task.completed ? "Done" : "Active"}
             </Button>
-            <Button 
-              icon={<EditOutlined className="!text-[#9d6b53]" />} 
-              onClick={() => setEdited(task)} 
+            <Button
+              icon={<EditOutlined className="!text-[#9d6b53]" />}
+              onClick={() => setEdited(task)}
             />
             <Button
               icon={<DeleteOutlined className="!text-[#9d6b53]" />}

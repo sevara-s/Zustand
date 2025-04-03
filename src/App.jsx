@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Spin } from 'antd';
-import ProgressBar from './components/progressbar';
-import TaskInput from './components/taskInput';
-import TaskList from './components/taskList';
-import { useTodoStore } from './store/store';
+import React, { useEffect } from "react";
+import { Spin } from "antd";
+import ProgressBar from "./components/progressbar";
+import TaskInput from "./components/taskInput";
+import TaskList from "./components/taskList";
+import { useTodoStore } from "./store/store";
 
 function App() {
   const { fetchTasks, loading, error } = useTodoStore();
@@ -22,19 +22,17 @@ function App() {
 
   return (
     <div className="p-4 max-w-lg mx-auto border-2 border-[#e6ccb2] mt-[40px] bg-[#e6ccb2] rounded-4xl">
-      
-        {loading ? (
-          <div className="flex justify-center py-8">
-            <Spin size="large" />
-          </div>
-        ) : (
-          <>
-            <ProgressBar />
-            <TaskInput />
-            <TaskList />
-          </>
-        )}
-    
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <>
+          <ProgressBar />
+          <TaskInput />
+          <TaskList />
+        </>
+      )}
     </div>
   );
 }

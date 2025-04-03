@@ -6,9 +6,7 @@ import { useTodoStore } from "../../store/store";
 const TaskInput = () => {
   const [task, setTask] = useState("");
   const [searching, setSearching] = useState(false);
-  const searchQuery = useTodoStore(state => state.searchQuery);
-  const add = useTodoStore(state => state.add);
-  const search = useTodoStore(state => state.search);
+  const {searchQuery, add, search} = useTodoStore();
 
   const handleAdd = () => {
     if (task.trim()) {

@@ -6,17 +6,15 @@ const API_URL = "https://67b04cd6dffcd88a6788d8b6.mockapi.io/todo";
 export const useTodoStore = create(
   persist(
     (set, get) => ({
-      // State
       tasks: [],
       searchQuery: "",
       loading: false,
       error: null,
 
-      // Actions
       fetchTasks: async () => {
-        const { tasks } = get(); // Prevent fetching if already fetched
-        if (tasks.length > 0) return; // Do nothing if tasks are already loaded
-
+        const { tasks } = get(); 
+        if (tasks.length > 0) return;  
+        
         set({ loading: true, error: null });
         try {
           const response = await fetch(API_URL);
@@ -29,10 +27,18 @@ export const useTodoStore = create(
         }
       },
 
-      // Search query update action
+      add: (task) => {
+        const newTask = {
+          id: Date.now().toString(),   
+          name: task,
+          completed: false,
+        };
+        const tasks = get().tasks;
+        set({ tasks: [...tasks, newTask] });
+      },
+
       updateSearchQuery: (query) => set({ searchQuery: query }),
 
-      // Task toggle action (mark task as completed or active)
       toggleTask: (id) => {
         const tasks = get().tasks;
         const updatedTasks = tasks.map((task) =>
@@ -41,39 +47,24 @@ export const useTodoStore = create(
         set({ tasks: updatedTasks });
       },
 
-      // Task delete action
       deleteTask: (id) => {
         const tasks = get().tasks.filter((task) => task.id !== id);
         set({ tasks });
       },
 
-      // Task edit action
       editTask: (updatedTask) => {
         const tasks = get().tasks.map((task) =>
           task.id === updatedTask.id ? updatedTask : task
         );
         set({ tasks });
       },
+
+      search: (query) => set({ searchQuery: query }),
     }),
     {
-      name: "todo-storage", // Key to persist in storage
+      name: "todo-storage",  
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ tasks: state.tasks }), // Only persist tasks
+      partialize: (state) => ({ tasks: state.tasks }),  
     }
   )
 );
-
-// Selectors
-export const useTasks = () => useTodoStore((state) => state.tasks);
-export const useSearchQuery = () => useTodoStore((state) => state.searchQuery);
-export const useLoading = () => useTodoStore((state) => state.loading);
-export const useTodoActions = () =>
-  useTodoStore((state) => ({
-    fetchTasks: state.fetchTasks,
-    updateSearchQuery: state.updateSearchQuery,
-    toggleTask: state.toggleTask,
-    deleteTask: state.deleteTask,
-    editTask: state.editTask,
-  }));
-
-export default useTodoStore;

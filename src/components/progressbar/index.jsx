@@ -1,10 +1,10 @@
 import { Progress } from "antd";
-import useTodoStore from "../../store/store";  
-
+import { useTodoStore } from "../../store/store";
 
 const ProgressBar = () => {
-  const tasks = useTodoStore((state) => state.tasks);
+  const {tasks} = useTodoStore();
   
+  // Check if tasks are not empty before calculating progress
   const completed = tasks.filter((task) => task.completed).length;
   const percent = tasks.length > 0 ? Math.round((completed / tasks.length) * 100) : 0;
 
