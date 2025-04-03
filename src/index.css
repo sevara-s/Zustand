@@ -1,0 +1,7 @@
+@import "antd/dist/reset.css";
+@import "tailwindcss";
+
+body{
+  background:#ede0d4;
+
+}
