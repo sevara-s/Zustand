@@ -87,10 +87,8 @@ export const useTodoStore = create(
       
           if (!response.ok) throw new Error("Failed to edit task");
       
-          // Log the task being updated
           console.log("Task updated in the store:", updatedTask);
       
-          // Update the task in the state directly
           set({
             tasks: get().tasks.map((task) =>
               task.id === updatedTask.id ? updatedTask : task

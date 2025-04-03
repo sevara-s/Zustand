@@ -3,8 +3,7 @@ import { useState } from "react";
 import { useTodoStore } from "../../store/store";
 
 const Edit = ({ task, close }) => {
-  const [newTask, setNewTask] = useState(task.text);
-  // const editTask = useTodoStore((state) => state.editTask);
+  const [newTask, setNewTask] = useState(task.name);   
   const { editTask } = useTodoStore();
 
   return (
@@ -27,7 +26,7 @@ const Edit = ({ task, close }) => {
             className="bg-[#e6ccb2] text-white px-4 py-2 rounded hover:bg-[#655a4f]"
             onClick={() => {
               if (newTask.trim() !== "") {
-                editTask({ ...task, text: newTask });
+                editTask({ ...task, name: newTask });   
                 close();
               }
             }}
