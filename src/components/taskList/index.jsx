@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { Button, Spin } from "antd"; // Importing Spin for loading state
+import { Button, Spin } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import Edit from "../edit";
 import { useTodoStore } from "../../store/store";
@@ -12,11 +12,6 @@ const TaskList = () => {
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
-
-  const filteredTasks = useMemo(() => {
-    const query = searchQuery?.toLowerCase() || "";
-    return tasks.filter((task) => task?.text?.toLowerCase()?.includes(query));
-  }, [tasks, searchQuery]);
 
   if (loading) {
     return (
@@ -32,7 +27,7 @@ const TaskList = () => {
 
   return (
     <div className="mt-4">
-      {filteredTasks.map((task) => (
+      {tasks.map((task) => (
         <div
           key={task.id}
           className="flex justify-between items-center border rounded-2xl border-[#9d6b53] p-2 my-2"
@@ -43,7 +38,7 @@ const TaskList = () => {
             }`}
             onClick={() => toggleTask(task.id)}
           >
-            {task.text}
+            {task.name}
           </span>
           <div className="flex gap-2">
             <Button
@@ -63,6 +58,7 @@ const TaskList = () => {
           </div>
         </div>
       ))}
+
       {edited && <Edit task={edited} close={() => setEdited(null)} />}
     </div>
   );
